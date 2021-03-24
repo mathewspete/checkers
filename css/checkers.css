@@ -1,5 +1,6 @@
 * {
     margin: 0;
+    background-color: #222;
 }
 
 
@@ -11,6 +12,7 @@
     border-radius: 10px;
     position: relative;
     margin: auto;
+    box-shadow: 0.5vmin 1vmin #444, 10px 14px 4px 5px #000;
 }
 
 .dark {
@@ -52,6 +54,7 @@ div.square>.checker {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    box-shadow: 8px 8px 16px 0px #000, inset 3px 3px 4px #000;
 }
 
 .red {
@@ -80,13 +83,46 @@ svg {
 
 }
 
-button div.checker {
-    width: 90%;
-    height: 80%;
+.active .checker {
+    animation-name: bounce;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes bounce {
+    0% {
+        width: 78%;
+        height: 78%;
+        transform: translate(-50%, -50%);
+        box-shadow: 5px 5px 10px 0px #000, inset 3px 3px 4px #000;
+    }
+
+
+
+    50% {
+        width: 86%;
+        height: 86%;
+        transform: translate(-50%, -50%);
+        box-shadow: 12px 12px 24px 0px #000, inset 3px 3px 2px #000;
+    }
+
+
+
+    100% {
+        width: 78%;
+        height: 78%;
+        transform: translate(-50%, -50%);
+        box-shadow: 5px 5px 10px 0px #000, inset 3px 3px 4px #000;
+    }
+
 }
 
 
 @media (prefers-color-scheme: light) {
+
+    * {
+        background: #ccc;
+    }
 
     .dark {
         background: #567;
@@ -105,7 +141,7 @@ button div.checker {
     }
 
     .red {
-        background-color: red
+        background-color: RED
     }
 
     .black {
@@ -120,4 +156,5 @@ button div.checker {
     .black svg {
         fill: rgba(255, 255, 255, .3);
     }
+
 }
