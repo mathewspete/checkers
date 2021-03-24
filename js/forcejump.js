@@ -5,6 +5,7 @@ var activeSelect;
 var teamRed = 12;
 var teamBlack = 12;
 var fromTo = [];
+var turnToggle = false;
 
 /*
 
@@ -25,9 +26,11 @@ while (teamRed>0 && teamBlack>0)
 
 function active(params) {
     var square = [];
+
     $("div").removeClass("active");
     var player = (turn === 'black') ? 'red' : 'black';
     if ($(this).data('status') === turn) {
+        turnToggle = true;
         square.push($(this).data('row'));
         square.push($(this).data('col'));
         fromTo[0] = square;
@@ -35,8 +38,14 @@ function active(params) {
         $(this).toggleClass('active');
         console.log(fromTo);
     } if ($(this).data('status') === player) {
-        alert(`Nice try!\n. . .But it's not ${player}'s turn!`)
-    } else { }
+        alert(`Nice try!\n. . .But it's not ${player}'s turn!`);
+        turnToggle = false;
+    } else {
+        if (turnToggle === true) {
+            if ($(this).data('row') === fromTo[0])
+        }
+        turnToggle = false;
+    }
 }
 
 
