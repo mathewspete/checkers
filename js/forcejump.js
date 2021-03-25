@@ -1,31 +1,34 @@
-let turnCt = 0;
-let teamRed = 12;
-let teamBlack = 12;
-let coords = {};
-let turnToggle = false;
-let turn,
-    color,
-    activeSelect,
-    player;
-
+var turnCt = 0;
+var teamRed = 12;
+var teamBlack = 12;
+var coords = {};
+var turnToggle = false;
+let player,
+status,
+color,
+turn,
+activeSelect;
 
 
 /*
 
 while (teamRed>0 && teamBlack>0)
-    // no must jump, but must complete double jumps.
-        click a square
-        check if square has a piece
-        if it the piece is the color for turn, set turnToggle to TRUE
-        toggle an "active" class to highlight the selected piece
-        wait the next click
-            if click has checker same as turn, set that square to active
-            if click = +/- 1 rc && square is open, move active piece.
-            if click = +/- 2 rc && rc +/- 1 is opp color, clear the opp piece teamOpp-- and move active piece.
-                if +/- 2 is open and +/- 1 is opp color, keep square active.
-                else, end turn
+// no must jump, but must complete double jumps.
+click a square
+check if square has a piece
+if it the piece is the color for turn, set turnToggle to TRUE
+toggle an "active" class to highlight the selected piece
+wait the next click
+if click has checker same as turn, set that square to active
+if click = +/- 1 rc && square is open, move active piece.
+if click = +/- 2 rc && rc +/- 1 is opp color, clear the opp piece teamOpp-- and move active piece.
+if +/- 2 is open and +/- 1 is opp color, keep square active.
+else, end turn
 */
 
+function isTurn(){
+    turn = (turnCt % 2 === 0) ? "black" : 'red';
+}
 
 function active(params) {
     let square = [];
@@ -38,12 +41,11 @@ function active(params) {
         case turn:
             turnToggle = true;
             coords.row = ($(this).data('row'));
-            coords.column = $(this).data('col');
-            activeSelect = $(this).find('div').attr('id');
+            coords.column = ($(this).data('col'));
+            var activeSelect = $(this).find('div').attr('id');
             $(this).toggleClass('active');
-            //console.log(fromTo);
+            console.log(coords);
             break;
-
         case player:
             alert(`Nice try!\n. . .But it's not ${player}'s turn!`);
             turnToggle = false;
@@ -83,6 +85,9 @@ function makeMove(row, column) {
     turnToggle = false;
 }
 
+const makeMove = (selectedRow, selectedCol) => {
+    console.log(`sqr = ${selectedRow}, ${selectedCol}`);
+}
 
 
 
@@ -113,10 +118,6 @@ function jump() {
 }
 
 
-
-function isTurn() {
-    turn = (turnCt % 2 === 0) ? "black" : 'red';
-}
 function getColor(sqr) {
     var alt = $(this).find('div').attr('class');
     //console.log(alt.includes('black'));
