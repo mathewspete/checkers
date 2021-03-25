@@ -1,11 +1,14 @@
-var turnCt = 0;
-var turn;
-var color;
-var activeSelect;
-var teamRed = 12;
-var teamBlack = 12;
-var fromTo = [];
-var turnToggle = false;
+let turnCt = 0;
+let teamRed = 12;
+let teamBlack = 12;
+let coords = {};
+let turnToggle = false;
+let turn,
+    color,
+    activeSelect,
+    player;
+
+
 
 /*
 
@@ -25,32 +28,60 @@ while (teamRed>0 && teamBlack>0)
 
 
 function active(params) {
-    var square = [];
+    let square = [];
+    let status = $(this).data('status')
 
     $("div").removeClass("active");
-    var player = (turn === 'black') ? 'red' : 'black';
-    if ($(this).data('status') === turn) {
-        turnToggle = true;
-        square.push($(this).data('row'));
-        square.push($(this).data('col'));
-        fromTo[0] = square;
-        var activeSelect = $(this).find('div').attr('id');
-        $(this).toggleClass('active');
-        console.log(fromTo);
-    } if ($(this).data('status') === player) {
-        alert(`Nice try!\n. . .But it's not ${player}'s turn!`);
-        turnToggle = false;
-    } else {
-        if (turnToggle === true) {
-            if ($(this).data('row') === fromTo[0])
-        }
-        turnToggle = false;
+    player = (turn === 'black') ? 'red' : 'black';
+
+    switch (status) {
+        case turn:
+            turnToggle = true;
+            coords.row = ($(this).data('row'));
+            coords.column = $(this).data('col');
+            activeSelect = $(this).find('div').attr('id');
+            $(this).toggleClass('active');
+            //console.log(fromTo);
+            break;
+
+        case player:
+            alert(`Nice try!\n. . .But it's not ${player}'s turn!`);
+            turnToggle = false;
+            break;
+
+        default:
+            console.log('default');
+            let rOffset = $(this).data('row') - coords.row;
+            let cOffset = $(this).data('col') - coords.column;
+            console.log('rOffset ' + rOffset + ' | cOffset ' + cOffset);
+            switch (turn) {
+                case "black":
+                    switch (rOffset) {
+                        case -1:
+                            if (cOffset === -1 || cOffset === 1) {
+                                makeMove($(this).data('row'), $(this).data('col'))
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+            }
+            break;
     }
 }
 
 
 
-
+function makeMove(row, column) {
+    // can add some animation here at some point.
+    let moveToId = document.getElementById(`${row}-${column}`);
+    let moveFromId = document.getElementById(`${coords.row}-${coords.column}`);
+    let piece = moveFromId.innerHTML;
+    moveFromId.innerHTML = "";
+    moveToId.innerHTML = piece;
+    turnToggle = false;
+}
 
 
 
@@ -81,9 +112,7 @@ function jump() {
 
 }
 
-function makeMove() {
-    turnCt++;
-}
+
 
 function isTurn() {
     turn = (turnCt % 2 === 0) ? "black" : 'red';
