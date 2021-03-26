@@ -26,6 +26,9 @@ if +/- 2 is open and +/- 1 is opp color, keep square active.
 else, end turn
 */
 
+
+console.log('hello');
+
 function isTurn(){
     turn = (turnCt % 2 === 0) ? "black" : 'red';
 }
@@ -40,15 +43,6 @@ function active() {
 
     switch (status) {
         case turn:
-            debuggy.trigger = "status.player"
-            debuggy.status = status;
-            debuggy.turn = turn;
-            debuggy.turnToggle = turnToggle;
-            debuggy.coords = coords;
-            debuggy.player = player;
-            debuggy.class = $(this).attr("class");
-            debuggy.id = activeSelect;
-            console.log(debuggy);
             turnToggle = true;
             coords.row = ($(this).attr('data-row'));
             coords.column = ($(this).attr('data-col'));
@@ -57,41 +51,24 @@ function active() {
             console.log(`coords = ${coords}`);
             break;
         case player:
-            debuggy.trigger = "status.player"
-            debuggy.status = status;
-            debuggy.turn = turn;
-            debuggy.turnToggle = turnToggle;
-            debuggy.coords = coords;
-            debuggy.player = player;
-            debuggy.class = $(this).attr("class");
-            debuggy.id = activeSelect;
             console.log(debuggy);
             console(`Nice try!\n. . .But it's not ${player}'s turn!`);
             turnToggle = false;
             break;
 
         default:
-            debuggy.trigger = "status.default"
-            debuggy.status = status;
-            debuggy.turn = turn;
-            debuggy.turnToggle = turnToggle;
-            debuggy.coords = coords;
-            debuggy.player = player;
-            debuggy.class = $(this).attr("class");
-            debuggy.id = activeSelect;
-            console.log(debuggy);
             let rOffset = $(this).attr('data-row') - coords.row;
             let cOffset = $(this).attr('data-col') - coords.column;
-            columnOffsetNotJump = (cOffset === -1 || cOffset === 1);
+            columnOffsetNoJump = (cOffset === -1 || cOffset === 1);
             let jumpCol = coords.column+(cOffset/2);
             let jumpee = document.getElementById(`${coords.row-1}-${jumpCol}`);
-
-
+            
+            
             switch (turn) {
                 case "black":
                     switch (rOffset) {
                         case -1:
-                            if (columnOffsetNotJump) {
+                            if (columnOffsetNoJump) {
                                 makeMove($(this).attr('data-row'), $(this).attr('data-col'))
                             }
                             break;
@@ -100,16 +77,16 @@ function active() {
                                 makeMove($(this).attr('data-row'), $(this).attr('data-col'));
                             }
                             break;
-
+                            
                         default:
                             break;
                     }
                     break;
-
+                                
                 case "red":
                     switch (rOffset) {
                         case 1:
-                            if (columnOffsetNotJump) {
+                            if (columnOffsetNoJump) {
                                 makeMove($(this).attr('data-row'), $(this).attr('data-col'))
                             }
                             break;
@@ -118,7 +95,7 @@ function active() {
                                 makeMove($(this).attr('data-row'), $(this).attr('data-col'));
                             }
                             break;
-
+                            
                         default:
                             break;
                     }
@@ -132,12 +109,21 @@ function active() {
 
 const checkJump = (column) => {
     let jumpCol = parseInt(coords.column) + (column/2);
-    console.log(`${coords.row-1}-${coords.column}-${column}`);
-    let jumpee = document.getElementById(`${coords.row-1}-${jumpCol}`);
-    console.log(`${coords.row-1}-${jumpCol}`);
-    let jumpeeId = jumpee.getAttribute('data-status');
-    return (jumpeeId === player && (column === -2 || column === 2));
-}
+    let jumpeeId = document.getElementById(`${coords.row - 1}-${jumpCol}`);
+    let jumpeeStatus = jumpeeId.getAttribute('data-status');
+    let allowed = (jumpeeStatus === player && (column === -2 || column === 2)) ? makeJump(jumpeeId) : false;
+    return (jumpeeStatus === player && (column === -2 || column === 2));
+};
+
+const makeJump = (id) => {
+    id.innerHTML = "";
+    if (player === "red") {
+        teamRed--;
+    } else {
+        teamBlack--;
+    }
+    return true;
+};
 
 const makeMove = (row, column) => {
     // can add some animation here at some point.
@@ -156,9 +142,6 @@ const makeMove = (row, column) => {
 
 
 
-
-console.log('hello');
-
 function getLocale() {
     let $val = $(this);
     console.log(`${$val.attr('data-row')}, ${$val.attr('data-col')}`);
@@ -175,7 +158,7 @@ function isQueen() {
 }
 
 function makeQueen(id) {
-
+    
 }
 
 
@@ -197,5 +180,20 @@ $('.dark').click(isTurn);
 $('.dark').on("click", active);
 
 const click = (id) => {
-
+    
 }
+
+
+/*
+
+debuggy.trigger = "status.default"
+debuggy.status = status;
+debuggy.turn = turn;
+debuggy.turnToggle = turnToggle;
+debuggy.coords = coords;
+debuggy.player = player;
+debuggy.class = $(this).attr("class");
+debuggy.id = activeSelect;
+console.log(debuggy);
+
+*/
