@@ -3,7 +3,7 @@ var teamRed = 12;
 var teamBlack = 12;
 var coords = {};
 var turnToggle = false;
-let player,
+let nonPlayer,
 status,
 color,
 turn,
@@ -27,19 +27,26 @@ else, end turn
 */
 
 
+
 console.log('hello');
 
-function isTurn(){
+const isTurn = () => {
     turn = (turnCt % 2 === 0) ? "black" : 'red';
+    nonPlayer = (turn === 'black') ? 'red' : 'black';
 }
 
-function active() {
-    status = "";
+const checkClick = () => {
     status = $(this).attr('data-status');
+    $("div").removeClass("active");
+}
+
+
+
+function active() {
+    status = $(this).attr('data-status'); //=====
     console.log(`status = ${status}`);
 
-    $("div").removeClass("active");
-    player = (turn === 'black') ? 'red' : 'black';
+    $("div").removeClass("active");  //=====
 
     switch (status) {
         case turn:
@@ -50,9 +57,8 @@ function active() {
             $(this).toggleClass('active');
             console.log(`coords = ${coords}`);
             break;
-        case player:
-            console.log(debuggy);
-            console(`Nice try!\n. . .But it's not ${player}'s turn!`);
+        case nonPlayer:
+            console.log(`Nice try!\n. . .But it's not ${nonPlayer}'s turn!`);
             turnToggle = false;
             break;
 
@@ -109,19 +115,23 @@ function active() {
 
 const checkJump = (column) => {
     let jumpCol = parseInt(coords.column) + (column/2);
-    let jumpeeId = document.getElementById(`${coords.row - 1}-${jumpCol}`);
+    console.log(`(coords.column) + (column/2) = ${coords.column} + ${column/2} = ${jumpCol}`);
+    let jumpRow = (turn === "red")?parseInt(coords.row)+1:coords.row-1;
+    console.log(`jumpRow = (turn === "red")?coords.row+1:coords.row-1; = ${jumpRow} = ${(turn === "red")}?${parseInt(coords.row)+1}:${coords.row-1};`)
+    let jumpeeId = document.getElementById(`${jumpRow}-${jumpCol}`);
     let jumpeeStatus = jumpeeId.getAttribute('data-status');
-    let allowed = (jumpeeStatus === player && (column === -2 || column === 2)) ? makeJump(jumpeeId) : false;
-    return (jumpeeStatus === player && (column === -2 || column === 2));
+    let allowed = (jumpeeStatus === nonPlayer && (column === -2 || column === 2)) ? makeJump(jumpeeId) : false;
+    return allowed;
 };
 
 const makeJump = (id) => {
     id.innerHTML = "";
-    if (player === "red") {
+    if (nonPlayer === "red") {
         teamRed--;
     } else {
         teamBlack--;
     }
+    id.setAttribute('data-status', "open");
     return true;
 };
 
@@ -134,6 +144,7 @@ const makeMove = (row, column) => {
     moveToId.innerHTML = piece;
     turnToggle = false;
     turnCt++ // will delete
+    console.log(`turnCt = ${turnCt}`)
     moveFromId.setAttribute('data-status', "open");
     moveToId.setAttribute('data-status', turn);
     coords = {};
